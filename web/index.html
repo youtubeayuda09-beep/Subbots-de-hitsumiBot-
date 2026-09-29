@@ -425,6 +425,7 @@
     .game-section {
       margin: 100px 0;
       text-align: center;
+      padding-bottom: 50px;
     }
 
     .game-container {
@@ -540,6 +541,10 @@
         min-width: auto;
         width: 100%;
       }
+
+      #gameCanvas {
+        height: 300px;
+      }
     }
   </style>
 </head>
@@ -555,14 +560,14 @@
     ⏤͟͟͞͞★꙲⃝͟𓃠 HITSUMI<span>BOT</span>
   </div>
 
-  <button class="menu-toggle" id="menuToggle">
+  <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
     <span></span>
     <span></span>
     <span></span>
   </button>
 
   <nav class="menu">
-    <a href="#">🌙 INICIO</a>
+    <a href="#inicio">🌙 INICIO</a>
     <a href="#comunidad">👥 COMUNIDAD</a>
     <a href="#juego">🎮 JUEGO</a>
   </nav>
@@ -571,7 +576,7 @@
 <main>
 
   <!-- SECCIÓN HERO -->
-  <section class="hero">
+  <section class="hero" id="inicio">
     <div>
       <div class="badge">
         ⚡ BOT DE WHATSAPP
@@ -707,6 +712,13 @@ menuToggle.addEventListener('click', () => {
   menu.style.zIndex = '9';
 });
 
+// Cerrar menú al hacer clic en un enlace
+document.querySelectorAll('.menu a').forEach(link => {
+  link.addEventListener('click', () => {
+    menu.style.display = 'none';
+  });
+});
+
 // ===== JUEGO FLAPPY BIRD =====
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -746,6 +758,7 @@ class Game {
       this.pipes = [];
       this.score = 0;
       this.gameOver = false;
+      scoreDisplay.textContent = '0';
     }
     if (!this.gameOver) {
       this.birdVelocity = this.jumpPower;
@@ -913,9 +926,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     if (href !== '#' && document.querySelector(href)) {
       e.preventDefault();
       document.querySelector(href).scrollIntoView({ behavior: 'smooth' });
-      if (menu.style.display === 'flex') {
-        menu.style.display = 'none';
-      }
     }
   });
 });
