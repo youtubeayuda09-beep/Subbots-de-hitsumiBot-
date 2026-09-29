@@ -1,57 +1,855 @@
-<div align="center">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#02040c">
+  
+  <title>🌙 HitsumiBot — Bot de WhatsApp</title>
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&display=swap');
 
-# ⏤͟͟͞͞★꙲⃝͟𓃠 HITSUMIBOT
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-### 𓆩☾𓆪 SUBBOT SYSTEM
+    html {
+      scroll-behavior: smooth;
+    }
 
-**Crea tu propio Subbot de WhatsApp.**
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-family: 'Orbitron', sans-serif;
+      color: #f5f7ff;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(65, 100, 255, .16), transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(120, 40, 255, .13), transparent 30%),
+        linear-gradient(135deg, #02040c, #050814 45%, #02030a);
+    }
 
-</div>
+    /* ESTRELLAS FLOTANTES */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .35;
+      background-image:
+        radial-gradient(circle, #ffffff 1px, transparent 1px),
+        radial-gradient(circle, #7ea2ff 1px, transparent 1px);
+      background-size: 90px 90px, 130px 130px;
+      background-position: 0 0, 40px 70px;
+      animation: stars 18s linear infinite;
+      z-index: 1;
+    }
 
----
+    @keyframes stars {
+      from { transform: translateY(0); }
+      to { transform: translateY(90px); }
+    }
 
-<div align="center">
+    /* PARTÍCULAS FLOTANTES */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
 
-<img src="https://i.postimg.cc/BZ22Wj79/IMG-20260924-WA0041.jpg" width="700">
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: radial-gradient(circle, #a8bbff 0%, rgba(168, 187, 255, 0) 70%);
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(168, 187, 255, 0.8);
+      animation: float linear infinite;
+    }
 
-</div>
+    @keyframes float {
+      0% {
+        opacity: 0;
+        transform: translateY(100vh) translateX(0);
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-100vh) translateX(100px);
+      }
+    }
 
----
+    /* HEADER */
+    header {
+      position: relative;
+      z-index: 10;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 7%;
+      border-bottom: 1px solid rgba(100, 130, 255, .18);
+      background: rgba(2, 4, 12, .75);
+      backdrop-filter: blur(15px);
+    }
 
-## 𓆩☾𓆪 HITSUMIBOT — SUBBOT SYSTEM
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-shadow:
+        0 0 8px rgba(110, 150, 255, .8),
+        0 0 25px rgba(70, 100, 255, .5);
+    }
 
-HitsumiBot es una plataforma diseñada para crear y administrar **Subbots de WhatsApp** desde una interfaz web moderna.
+    .logo span {
+      color: #8faaff;
+    }
 
-El proyecto combina una interfaz web con un servidor capaz de gestionar sesiones independientes de WhatsApp.
+    .menu {
+      display: flex;
+      gap: 25px;
+    }
 
----
+    .menu a {
+      color: #aeb8d8;
+      text-decoration: none;
+      font-size: 12px;
+      transition: .3s;
+    }
 
-## ✦ ¿Qué podrás hacer?
+    .menu a:hover {
+      color: white;
+      text-shadow: 0 0 12px #7898ff;
+    }
 
-```text
-┌──────────────────────────────────────────────┐
-│                                              │
-│  📱 CREAR SUBBOT                             │
-│                                              │
-│  Introduce tu número de WhatsApp             │
-│  y el nombre de tu Subbot.                   │
-│                                              │
-│  ↓                                           │
-│                                              │
-│  ⚡ GENERACIÓN DEL CÓDIGO                    │
-│                                              │
-│  El servidor solicitará un código real       │
-│  de vinculación de WhatsApp.                 │
-│                                              │
-│  ↓                                           │
-│                                              │
-│  🔗 VINCULACIÓN                              │
-│                                              │
-│  Introduce el código en WhatsApp             │
-│  para conectar tu Subbot.                   │
-│                                              │
-│  ↓                                           │
-│                                              │
-│  ✅ SUBBOT CONECTADO                         │
-│                                              │
-└──────────────────────────────────────────────┘
+    /* MENÚ MÓVIL */
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 11;
+    }
+
+    .menu-toggle span {
+      width: 25px;
+      height: 3px;
+      background: #a8bbff;
+      border-radius: 2px;
+      transition: .3s;
+    }
+
+    /* MAIN */
+    main {
+      position: relative;
+      z-index: 2;
+      width: min(1100px, 90%);
+      margin: auto;
+    }
+
+    /* SECCIÓN HERO */
+    .hero {
+      min-height: calc(100vh - 80px);
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      align-items: center;
+      gap: 40px;
+      padding: 70px 0;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 12px 20px;
+      border: 1px solid rgba(100, 150, 255, .35);
+      border-radius: 30px;
+      color: #9eb8ff;
+      background: rgba(20, 30, 70, .35);
+      box-shadow: 0 0 25px rgba(70, 100, 255, .12);
+      animation: float 3s ease-in-out infinite;
+      margin-bottom: 25px;
+      font-size: 11px;
+      letter-spacing: 2px;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    h1 {
+      font-size: clamp(42px, 7vw, 82px);
+      line-height: .95;
+      letter-spacing: -3px;
+      margin-bottom: 25px;
+    }
+
+    .moving-title {
+      display: inline-block;
+      color: #9db5ff;
+      animation: glowText 2.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowText {
+      from {
+        transform: translateX(0);
+        text-shadow: 0 0 5px #738fff;
+      }
+      to {
+        transform: translateX(8px);
+        text-shadow:
+          0 0 10px #7898ff,
+          0 0 30px #526dff,
+          0 0 60px #334cff;
+      }
+    }
+
+    .description {
+      max-width: 600px;
+      color: #8993af;
+      line-height: 2;
+      font-size: 14px;
+      margin-bottom: 35px;
+    }
+
+    /* BOTONES */
+    .buttons {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 190px;
+      padding: 17px 28px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 1px;
+      transition: .3s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      color: #02040b;
+      background: linear-gradient(90deg, #728fff, #b6c6ff);
+      box-shadow:
+        0 0 15px rgba(100, 130, 255, .6),
+        0 0 45px rgba(70, 100, 255, .25);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow:
+        0 0 25px rgba(120, 150, 255, .9),
+        0 0 70px rgba(70, 100, 255, .4);
+    }
+
+    .btn-primary::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 70%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.7),
+        transparent
+      );
+      transform: skewX(-20deg);
+      animation: shine 3s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shine {
+      0% { left: -100%; }
+      45%, 100% { left: 150%; }
+    }
+
+    .btn-secondary {
+      color: #b8c3e0;
+      border: 1px solid rgba(120, 145, 220, .3);
+      background: rgba(10, 15, 35, .6);
+    }
+
+    .btn-secondary:hover {
+      color: white;
+      border-color: #7898ff;
+      box-shadow: 0 0 25px rgba(80, 110, 255, .25);
+      transform: translateY(-4px);
+    }
+
+    /* IMAGEN ANIME */
+    .hero-image {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .image-orbit {
+      position: relative;
+      width: min(360px, 80vw);
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-orbit::before {
+      content: "";
+      position: absolute;
+      inset: 5%;
+      border-radius: 50%;
+      border: 1px solid rgba(110, 140, 255, .25);
+      box-shadow:
+        0 0 30px rgba(80, 110, 255, .2),
+        inset 0 0 40px rgba(80, 100, 255, .12);
+      animation: rotate 12s linear infinite;
+    }
+
+    .image-orbit::after {
+      content: "𓆩☾𓆪";
+      position: absolute;
+      top: 5%;
+      right: 8%;
+      font-size: 28px;
+      color: #a8bbff;
+      text-shadow: 0 0 20px #718cff;
+      animation: float 2.5s ease-in-out infinite;
+    }
+
+    @keyframes rotate {
+      to { transform: rotate(360deg); }
+    }
+
+    .hero-image img {
+      width: 220px;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 35px;
+      border: 1px solid rgba(140, 160, 255, .45);
+      box-shadow:
+        0 0 20px rgba(80, 110, 255, .45),
+        0 0 80px rgba(60, 80, 255, .2);
+      animation: imageFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes imageFloat {
+      0%, 100% {
+        transform: translateY(0) rotate(-2deg);
+      }
+      50% {
+        transform: translateY(-15px) rotate(2deg);
+      }
+    }
+
+    /* SECCIÓN DE COMUNIDAD */
+    .community-section {
+      margin: 100px 0;
+      text-align: center;
+    }
+
+    .section-title {
+      margin-bottom: 50px;
+    }
+
+    .section-title h2 {
+      font-size: clamp(32px, 5vw, 56px);
+      margin-bottom: 15px;
+      text-shadow:
+        0 0 10px rgba(110, 150, 255, .5),
+        0 0 30px rgba(70, 100, 255, .3);
+    }
+
+    .section-title p {
+      color: #8993af;
+      font-size: 14px;
+    }
+
+    .community-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 50px;
+    }
+
+    .btn-community {
+      min-width: 240px;
+      padding: 20px 30px;
+      font-size: 13px;
+      border: 2px solid rgba(110, 150, 255, .4);
+      background: rgba(20, 30, 70, .4);
+      box-shadow:
+        0 0 20px rgba(100, 130, 255, .3),
+        inset 0 0 20px rgba(100, 130, 255, .05);
+      color: #a8bbff;
+      transition: .4s;
+    }
+
+    .btn-community:hover {
+      border-color: rgba(110, 150, 255, .8);
+      background: rgba(20, 30, 70, .6);
+      box-shadow:
+        0 0 30px rgba(120, 150, 255, .5),
+        0 0 60px rgba(70, 100, 255, .3);
+      transform: translateY(-8px);
+      color: white;
+    }
+
+    /* JUEGO TIPO FLAPPY BIRD */
+    .game-section {
+      margin: 100px 0;
+      text-align: center;
+      padding-bottom: 50px;
+    }
+
+    .game-container {
+      width: 100%;
+      max-width: 400px;
+      margin: 30px auto;
+      border: 2px solid rgba(110, 150, 255, .5);
+      border-radius: 15px;
+      background: rgba(5, 8, 20, .8);
+      box-shadow:
+        0 0 30px rgba(80, 110, 255, .3),
+        inset 0 0 30px rgba(80, 100, 255, .1);
+      overflow: hidden;
+    }
+
+    #gameCanvas {
+      display: block;
+      width: 100%;
+      height: 400px;
+      background: linear-gradient(135deg, #0a0e2e 0%, #16213e 100%);
+      cursor: pointer;
+    }
+
+    .game-info {
+      padding: 20px;
+      background: rgba(20, 30, 70, .5);
+      border-top: 1px solid rgba(110, 150, 255, .2);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .game-stat {
+      text-align: center;
+    }
+
+    .game-stat-label {
+      font-size: 11px;
+      color: #7898ff;
+      margin-bottom: 5px;
+    }
+
+    .game-stat-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: #a8bbff;
+      text-shadow: 0 0 10px #7898ff;
+    }
+
+    .game-controls {
+      padding: 20px;
+      background: rgba(20, 30, 70, .3);
+      border-top: 1px solid rgba(110, 150, 255, .2);
+      font-size: 12px;
+      color: #8993af;
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 50px 20px;
+      color: #4e5873;
+      font-size: 10px;
+      letter-spacing: 2px;
+      margin-top: 100px;
+      border-top: 1px solid rgba(100, 130, 255, .1);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 800px) {
+      header {
+        padding: 0 5%;
+      }
+
+      .menu {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: flex;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding-top: 50px;
+      }
+
+      .description {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .buttons {
+        justify-content: center;
+      }
+
+      .hero-image {
+        order: -1;
+      }
+
+      h1 {
+        letter-spacing: -2px;
+      }
+
+      .community-buttons {
+        flex-direction: column;
+      }
+
+      .btn-community {
+        min-width: auto;
+        width: 100%;
+      }
+
+      #gameCanvas {
+        height: 300px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- PARTÍCULAS FLOTANTES -->
+<div class="particles" id="particlesContainer"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    ⏤͟͟͞͞★꙲⃝͟𓃠 HITSUMI<span>BOT</span>
+  </div>
+
+  <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <nav class="menu">
+    <a href="#inicio">🌙 INICIO</a>
+    <a href="#comunidad">👥 COMUNIDAD</a>
+    <a href="#juego">🎮 JUEGO</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- SECCIÓN HERO -->
+  <section class="hero" id="inicio">
+    <div>
+      <div class="badge">
+        ⚡ BOT DE WHATSAPP
+      </div>
+
+      <h1>
+        Hola, soy<br>
+        <span class="moving-title">HitsumiBot</span>
+      </h1>
+
+      <p class="description">
+        Un bot de WhatsApp con temática futurista, lunar y anime. 
+        Escríbeme en WhatsApp y descubre todo lo que puedo hacer por ti.
+      </p>
+
+      <div class="buttons">
+        <a href="https://wa.me/34611111111" class="btn btn-primary" target="_blank">
+          💬 CONTACTARME
+        </a>
+
+        <a href="#comunidad" class="btn btn-secondary">
+          👥 COMUNIDAD
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-image">
+      <div class="image-orbit">
+        <img
+          src="https://i.postimg.cc/BZ22Wj79/IMG-20260924-WA0041.jpg"
+          alt="HitsumiBot"
+          onerror="this.style.display='none'"
+        >
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN COMUNIDAD -->
+  <section id="comunidad" class="community-section">
+    <div class="section-title">
+      <h2>🌐 NUESTRA COMUNIDAD</h2>
+      <p>Únete a nuestro grupo y canal oficial de WhatsApp</p>
+    </div>
+
+    <div class="community-buttons">
+      <a href="https://chat.whatsapp.com/EICDxk3Dzx0Ae3uOJEZVRH" target="_blank" rel="noopener noreferrer" class="btn btn-community">
+        👥 GRUPO OFICIAL
+      </a>
+      <a href="https://whatsapp.com/channel/0029VbENN4t1t90jhORoPK1Z" target="_blank" rel="noopener noreferrer" class="btn btn-community">
+        📢 CANAL OFICIAL
+      </a>
+    </div>
+  </section>
+
+  <!-- SECCIÓN JUEGO -->
+  <section id="juego" class="game-section">
+    <div class="section-title">
+      <h2>🎮 JUEGA CONMIGO</h2>
+      <p>Intenta volar sin chocar con los obstáculos</p>
+    </div>
+
+    <div class="game-container">
+      <canvas id="gameCanvas" width="400" height="400"></canvas>
+      <div class="game-info">
+        <div class="game-stat">
+          <div class="game-stat-label">PUNTOS</div>
+          <div class="game-stat-value" id="score">0</div>
+        </div>
+        <div class="game-stat">
+          <div class="game-stat-label">MEJOR</div>
+          <div class="game-stat-value" id="bestScore">0</div>
+        </div>
+      </div>
+      <div class="game-controls">
+        <p>Haz clic o toca la pantalla para volar ⬆️</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  🌙 HitsumiBot — Desarrollado con 💜 por 𓃠 𝐘𝐨𝐞𝐥
+</footer>
+
+<script>
+// ===== PARTÍCULAS FLOTANTES =====
+function createParticles() {
+  const container = document.getElementById('particlesContainer');
+  const particleCount = 30;
+
+  for (let i = 0; i < particleCount; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    
+    const left = Math.random() * 100;
+    const delay = Math.random() * 10;
+    const duration = Math.random() * 15 + 20;
+    
+    particle.style.left = left + '%';
+    particle.style.animationDuration = duration + 's';
+    particle.style.animationDelay = delay + 's';
+    
+    container.appendChild(particle);
+
+    // Recrear partícula cuando termina la animación
+    setTimeout(() => {
+      particle.remove();
+      createParticles();
+    }, (delay + duration) * 1000);
+  }
+}
+
+createParticles();
+
+// ===== MENÚ MÓVIL =====
+const menuToggle = document.getElementById('menuToggle');
+const menu = document.querySelector('.menu');
+
+menuToggle.addEventListener('click', () => {
+  menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+  menu.style.position = 'absolute';
+  menu.style.top = '80px';
+  menu.style.right = '5%';
+  menu.style.flexDirection = 'column';
+  menu.style.gap = '15px';
+  menu.style.background = 'rgba(2, 4, 12, .95)';
+  menu.style.padding = '20px';
+  menu.style.borderRadius = '12px';
+  menu.style.border = '1px solid rgba(100, 130, 255, .2)';
+  menu.style.backdropFilter = 'blur(15px)';
+  menu.style.zIndex = '9';
+});
+
+// Cerrar menú al hacer clic en un enlace
+document.querySelectorAll('.menu a').forEach(link => {
+  link.addEventListener('click', () => {
+    menu.style.display = 'none';
+  });
+});
+
+// ===== JUEGO FLAPPY BIRD =====
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const scoreDisplay = document.getElementById('score');
+const bestScoreDisplay = document.getElementById('bestScore');
+
+let bestScore = localStorage.getItem('hitsumiGameBestScore') || 0;
+bestScoreDisplay.textContent = bestScore;
+
+class Game {
+  constructor() {
+    this.birdX = 60;
+    this.birdY = canvas.height / 2;
+    this.birdSize = 15;
+    this.birdVelocity = 0;
+    this.gravity = 0.5;
+    this.jumpPower = -12;
+
+    this.pipes = [];
+    this.pipeWidth = 50;
+    this.pipeGap = 120;
+    this.pipeDistance = 150;
+    this.score = 0;
+    this.gameOver = false;
+    this.gameStarted = false;
+
+    canvas.addEventListener('click', () => this.jump());
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      this.jump();
+    });
+  }
+
+  jump() {
+    if (!this.gameStarted) {
+      this.gameStarted = true;
+      this.pipes = [];
+      this.score = 0;
+      this.gameOver = false;
+      scoreDisplay.textContent = '0';
+    }
+    if (!this.gameOver) {
+      this.birdVelocity = this.jumpPower;
+    }
+  }
+
+  update() {
+    if (!this.gameStarted || this.gameOver) return;
+
+    this.birdVelocity += this.gravity;
+    this.birdY += this.birdVelocity;
+
+    // Generar tuberías
+    if (this.pipes.length === 0 || this.pipes[this.pipes.length - 1].x < canvas.width - this.pipeDistance) {
+      const topHeight = Math.random() * (canvas.height - this.pipeGap - 50) + 25;
+      this.pipes.push({
+        x: canvas.width,
+        topHeight: topHeight,
+        scored: false
+      });
+    }
+
+    // Actualizar tuberías
+    this.pipes.forEach((pipe, index) => {
+      pipe.x -= 6;
+
+      // Verificar puntuación
+      if (!pipe.scored && pipe.x < this.birdX) {
+        pipe.scored = true;
+        this.score++;
+        scoreDisplay.textContent = this.score;
+      }
+
+      // Colisión
+      if (
+        this.birdX + this.birdSize > pipe.x &&
+        this.birdX - this.birdSize < pipe.x + this.pipeWidth &&
+        (this.birdY - this.birdSize < pipe.topHeight ||
+         this.birdY + this.birdSize > pipe.topHeight + this.pipeGap)
+      ) {
+        this.endGame();
+      }
+
+      if (pipe.x < -this.pipeWidth) {
+        this.pipes.splice(index, 1);
+      }
+    });
+
+    // Colisión con suelo y techo
+    if (this.birdY + this.birdSize > canvas.height || this.birdY - this.birdSize < 0) {
+      this.endGame();
+    }
+  }
+
+  draw() {
+    // Fondo
+    ctx.fillStyle = 'rgba(10, 14, 46, 0.5)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Pájaro (estrellas)
+    ctx.fillStyle = '#a8bbff';
+    ctx.beginPath();
+    ctx.arc(this.birdX, this.birdY, this.birdSize, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#e8d0ff';
+    ctx.font = 'bold 20px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('✨', this.birdX, this.birdY);
+
+    // Sombra
+    ctx.shadowColor = '#a8bbff';
+    ctx.shadowBlur = 15;
+    ctx.strokeStyle = '#7898ff';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(this.birdX, this.birdY, this.birdSize + 5, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.shadowColor = 'transparent';
+
+    // Tuberías
+    this.pipes.forEach(pipe => {
+      // Tubería superior
+      ctx.fillStyle = 'rgba(110, 140, 255, 0.5)';
+      ctx.fillRect(pipe.x, 0, this.pipeWidth, pipe.topHeight);
+      
+      ctx.strokeStyle = '#7898ff';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(pipe.x, 0, this.pipeWidth, pipe.topHeight);
+
+      // Tubería inferior
+      ctx.fillStyle = 'rgba(110, 140, 255, 0.5)';
+      ctx.fillRect(pipe.x, pipe.
